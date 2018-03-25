@@ -2,7 +2,9 @@
 A pytorch implementation of [cycle gan](https://arxiv.org/pdf/1703.10593.pdf). 
 
 ## Introduction 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/D4C1dB9UheQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+[![Two Mins Explanation](http://img.youtube.com/vi/D4C1dB9UheQ/0.jpg)](http://www.youtube.com/watch?v=D4C1dB9UheQ "Two Mins Paper Explanation")
+
+
 
 ## Dependencies 
 - python3
