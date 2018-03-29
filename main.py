@@ -7,6 +7,30 @@ from network import *
 from dataset import * 
 import visdom 
 
+
+# custom weights initialization called on G and D
+def weights_init(m):
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        m.weight.data.normal_(0.0, 0.02)
+    elif classname.find('BatchNorm') != -1:
+        m.weight.data.normal_(1.0, 0.02)
+        m.bias.data.fill_(0)
+
+# some utility functions 
+def to_var(x):
+    if use_cuda:
+        x = x.cuda()
+    return Variable(x)
+
+def to_data(x):
+    if use_cuda:
+        x = x.cpu()
+    return x.data.numpy()
+
+
+
+
 batch_size = 32
 nc_mnist = 1
 nc_svhn = 3
@@ -18,14 +42,6 @@ use_cuda= torch.cuda.is_available()
 # load datasets
 svhn_loader, mnist_loader = get_mnist_svhn_loader(batch_size)
 
-# custom weights initialization called on G and D
-def weights_init(m):
-    classname = m.__class__.__name__
-    if classname.find('Conv') != -1:
-        m.weight.data.normal_(0.0, 0.02)
-    elif classname.find('BatchNorm') != -1:
-        m.weight.data.normal_(1.0, 0.02)
-        m.bias.data.fill_(0)
 
 
 # mnist to svhn
@@ -53,11 +69,10 @@ criterion = nn.CrossEntropyLoss()
 
 optim_g = optim.Adam(list(G12.parameters()) + list(G21.parameters()), 
                     lr, [0.5, 0.999])
-
 optim_d = optim.Adam(list(D1.parameters()) + list(D2.parameters()),
                      lr=lr)
 
-
+# if the code needs to be run on gpu, use flag use_cuda=True
 if use_cuda:
     G12.cuda()
     G21.cuda()
@@ -67,15 +82,7 @@ if use_cuda:
     optim_d.cuda()
     optim_g.cuda()
 
-def to_var(x):
-    if use_cuda:
-        x = x.cuda()
-    return Variable(x)
 
-def to_data(x):
-    if use_cuda:
-        x = x.cpu()
-    return x.data.numpy()
 
 def reset_grad():
     optim_g.zero_grad()
